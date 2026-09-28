@@ -1,0 +1,546 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Base Cabinet Run</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#EBEFF2; --panel:#F8FAFB; --ink:#17212B; --ink-2:#4B5968; --ink-3:#7C8997;
+  --line:#C7D0D8; --cab:#FFFFFF; --accent:#0F6A8B; --accent-soft:#D6E9F0;
+  --ok:#2F7D4F; --warn:#B45309; --warn-soft:#FBEBD6;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#10161C; --panel:#172029; --ink:#E2E8ED; --ink-2:#A0AEBB; --ink-3:#6F7D8A;
+    --line:#2D3945; --cab:#1B2631; --accent:#5DB6D8; --accent-soft:#16384A;
+    --ok:#5FBF86; --warn:#F0A04B; --warn-soft:#3A2A15;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#10161C; --panel:#172029; --ink:#E2E8ED; --ink-2:#A0AEBB; --ink-3:#6F7D8A;
+  --line:#2D3945; --cab:#1B2631; --accent:#5DB6D8; --accent-soft:#16384A;
+  --ok:#5FBF86; --warn:#F0A04B; --warn-soft:#3A2A15;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:24px 48px;display:grid;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px}
+h1{font-family:var(--display);font-weight:700;font-size:34px;letter-spacing:.01em;line-height:1;margin:0;text-transform:uppercase}
+.sub{color:var(--ink-2);margin:6px 0 0;max-width:62ch}
+.sheet{font-family:var(--mono);font-size:12px;color:var(--ink-3);text-align:right}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;padding:16px}
+.field{display:grid;gap:4px}
+.field label{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.field input,.field select{font-family:var(--mono);font-size:15px;color:var(--ink);background:var(--cab);border:1px solid var(--line);border-radius:4px;padding:8px 10px;width:100%}
+.field input:focus,.field select:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.field.big input{font-size:20px;font-weight:500}
+.hint{font-size:12px;color:var(--ink-3)}
+.status{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line)}
+.status b{font-family:var(--mono);font-weight:500}
+.pill{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:2px 9px;border-radius:99px;border:1px solid currentColor}
+.pill.ok{color:var(--ok)} .pill.warn{color:var(--warn)} .pill.info{color:var(--accent)}
+.elev{overflow-x:auto;padding:10px 12px 4px}
+.elev svg{display:block;width:100%;height:auto;min-width:560px}
+.editor{display:grid;gap:10px;padding:14px 16px;border-top:1px solid var(--line)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font-family:var(--mono);font-size:14px;padding:6px 10px;border-radius:4px;border:1px solid var(--line);background:var(--cab);color:var(--ink);cursor:pointer}
+.chip.filler{cursor:default;color:var(--ink-3);border-style:dashed}
+.chip.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+button.btn{font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;border-radius:4px;border:1px solid var(--line);background:var(--cab);color:var(--ink);cursor:pointer}
+button.btn:hover{border-color:var(--accent)}
+button.btn:disabled{opacity:.4;cursor:default}
+button.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+.seltools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.seltools .lbl{font-family:var(--display);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin-right:4px}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+h2{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:.08em;text-transform:uppercase;margin:0;padding:12px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+h2 small{font-family:var(--body);font-weight:400;font-size:12px;letter-spacing:0;text-transform:none;color:var(--ink-3)}
+.alts{display:grid}
+.alt{display:grid;grid-template-columns:28px 1fr;gap:4px 10px;padding:10px 16px;border-bottom:1px solid var(--line);cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;text-align:left;color:var(--ink);font:inherit;width:100%}
+.alt:last-child{border-bottom:0}
+.alt:hover{background:var(--accent-soft)}
+.alt.on{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+.alt .rank{font-family:var(--mono);color:var(--ink-3);grid-row:span 3}
+.alt .seq{font-family:var(--mono);font-size:14px}
+.bar{display:flex;height:12px;gap:1px}
+.bar span{background:var(--ink-2);border-radius:1px}
+.bar span.f{background:repeating-linear-gradient(45deg,var(--ink-3) 0 1px,transparent 1px 4px);opacity:.8}
+.tags{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;color:var(--ink-3)}
+.tags .y{color:var(--ok)} .tags .n{color:var(--warn)}
+.group{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:8px 16px 4px;border-bottom:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:7px 16px;border-bottom:1px solid var(--line)}
+th{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+td{font-family:var(--mono);font-size:13px}
+tr.tot td{font-weight:500;border-bottom:0}
+.rules{padding:12px 16px;color:var(--ink-2);font-size:13px;display:grid;gap:6px}
+.rules ol{margin:0;padding-left:20px;display:grid;gap:4px}
+details summary{cursor:pointer;font-family:var(--display);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);padding:0 16px 14px;font-size:13px}
+.adv{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;padding:0 16px 16px}
+.empty{padding:28px 16px;color:var(--warn);font-family:var(--mono)}
+/* svg */
+.s-ink{stroke:var(--ink);fill:none}
+.s-thin{stroke:var(--ink-2);fill:none}
+.s-cab{fill:var(--cab);stroke:var(--ink)}
+.s-sel{fill:var(--accent-soft);stroke:var(--accent)}
+.s-top{fill:var(--ink-2);stroke:var(--ink)}
+.s-kick{fill:var(--line);stroke:var(--ink)}
+.s-swing{stroke:var(--ink-3);fill:none}
+.s-txt{fill:var(--ink);font-family:var(--mono)}
+.s-txt2{fill:var(--ink-2);font-family:var(--mono)}
+.s-tag{fill:var(--accent);font-family:var(--display);font-weight:700}
+.s-dim{stroke:var(--ink-2);fill:none}
+.s-hatch{stroke:var(--ink-3)}
+.s-hit{cursor:pointer}
+@media (prefers-reduced-motion:no-preference){.chip,.alt,button.btn{transition:background .12s,border-color .12s}}
+</style>
+</head><body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Base Cabinet Run</h1>
+      <p class="sub">Enter the wall-to-wall dimension. The run gets a filler at each wall, and the space between is split into the fewest cabinets, kept symmetrical and stepping up toward the center where possible.</p>
+    </div>
+    <div class="sheet">ELEVATION · BASE CABINETS<br>34½" BOX + 1½" TOP · 4" TOE KICK</div>
+  </header>
+
+  <section class="panel">
+    <div class="controls">
+      <div class="field big">
+        <label for="w">Wall to wall</label>
+        <input id="w" value="126" inputmode="decimal" autocomplete="off">
+        <span class="hint">Inches, e.g. 126, 126 1/2, or 10'-6"</span>
+      </div>
+      <div class="field">
+        <label for="fmin">Filler, each side</label>
+        <input id="fmin" value="3" inputmode="decimal">
+        <span class="hint">Minimum width</span>
+      </div>
+      <div class="field">
+        <label for="fmax">Max filler</label>
+        <input id="fmax" value="4 1/2" inputmode="decimal">
+        <span class="hint">Leftover goes into fillers</span>
+      </div>
+      <div class="field">
+        <label for="n">Cabinet count</label>
+        <select id="n"></select>
+        <span class="hint">Auto uses the fewest</span>
+      </div>
+    </div>
+    <details>
+      <summary>Cabinet sizes</summary>
+      <div class="adv">
+        <div class="field"><label for="cmin">Smallest</label><input id="cmin" value="12" inputmode="decimal"></div>
+        <div class="field"><label for="cmax">Largest</label><input id="cmax" value="30" inputmode="decimal"></div>
+        <div class="field"><label for="cstep">Increment</label><input id="cstep" value="3" inputmode="decimal"></div>
+      </div>
+    </details>
+  </section>
+
+  <section class="panel">
+    <div class="status" id="status"></div>
+    <div class="elev" id="elev"></div>
+    <div class="editor">
+      <div class="row" id="chips"></div>
+      <div class="seltools" id="seltools"></div>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>Layout options <small>Click to load into the elevation</small></h2>
+      <div class="alts" id="alts"></div>
+    </section>
+    <div style="display:grid;gap:18px">
+      <section class="panel">
+        <h2>Schedule <button class="btn" id="copy" type="button">Copy</button></h2>
+        <div id="sched"></div>
+      </section>
+      <section class="panel">
+        <h2>How options are ranked</h2>
+        <div class="rules">
+          <ol>
+            <li>Fewest cabinets.</li>
+            <li>Symmetrical about the center line (21-24-24-21 beats 24-24-24-18).</li>
+            <li>Sizes step up toward the center, so with an odd count the center box is the largest.</li>
+            <li>Fillers closest to the minimum.</li>
+            <li>Smallest spread between largest and smallest box, then fewest different sizes.</li>
+          </ol>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const S={W:126,fMin:3,fMax:4.5,cmin:12,cmax:30,step:3,nMode:'auto',cands:[],chosen:-1,layout:[],sel:null,edited:false};
+
+/* ---------- length parsing / formatting ---------- */
+function parseLen(str){
+  if(str==null) return NaN;
+  let s=String(str).trim().replace(/["”″]/g,'').replace(/in(ches)?$/i,'').trim();
+  if(!s) return NaN;
+  let ft=0;
+  const fm=s.match(/^(\d+(?:\.\d+)?)\s*['’′]\s*-?\s*(.*)$/);
+  if(fm){ft=parseFloat(fm[1]);s=fm[2].trim();}
+  if(!s) return ft*12;
+  const m=s.match(/^(?:(\d+(?:\.\d+)?))?(?:[\s-]*(\d+)\s*\/\s*(\d+))?$/);
+  if(!m||(m[1]==null&&m[2]==null)) return NaN;
+  let v=m[1]?parseFloat(m[1]):0;
+  if(m[2]){const d=parseInt(m[3]);if(!d) return NaN;v+=parseInt(m[2])/d;}
+  return ft*12+v;
+}
+function fmt(x){
+  const neg=x<0; x=Math.abs(x);
+  let t=Math.round(x*16), w=Math.floor(t/16), r=t%16, d=16;
+  while(r&&r%2===0){r/=2;d/=2;}
+    let out;
+  if(!r) out=String(w);
+  else if(d===2) out=(w?w:'')+'½';
+  else if(d===4) out=(w?w:'')+(r===1?'¼':'¾');
+  else out=(w?w+' ':'')+r+'/'+d;
+  return (neg?'-':'')+out+'"';
+}
+function fmtFt(x){
+  const t=Math.round(x*16)/16, ft=Math.floor(t/12), inch=t-ft*12;
+  return ft+"'-"+fmt(inch);
+}
+
+/* ---------- solver (all math in 1/16" units) ---------- */
+const U=16, E=1e-6;
+function gcd(a,b){while(b){[a,b]=[b,a%b];}return a;}
+function sizeList(){
+  const out=[]; if(!(S.step>0)||!(S.cmin>0)||S.cmax<S.cmin) return out;
+  for(let s=S.cmin;s<=S.cmax+E;s+=S.step) out.push(Math.round(s*U));
+  return out;
+}
+function multisets(n,T,sizes,cap){
+  const res=[],cur=[];
+  (function rec(i,left,sum){
+    if(res.length>=cap) return;
+    if(left===0){if(sum===0)res.push(cur.slice());return;}
+    if(i<0) return;
+    const s=sizes[i];
+    if(sum<left*sizes[0]||sum>left*s) return;
+    for(let c=Math.min(left,Math.floor(sum/s));c>=0;c--){
+      for(let k=0;k<c;k++)cur.push(s);
+      rec(i-1,left-c,sum-c*s);
+      cur.length-=c;
+    }
+  })(sizes.length-1,n,T);
+  return res;
+}
+function metrics(a){
+  const n=a.length, mid=(n-1)/2;
+  let asym=0,shape=0;
+  for(let i=0;i<Math.floor(n/2);i++) asym+=Math.abs(a[i]-a[n-1-i]);
+  for(let i=0;i<n-1;i++){
+    if(i+1<=mid && a[i+1]<a[i]) shape+=a[i]-a[i+1];
+    else if(i>=mid && a[i+1]>a[i]) shape+=a[i+1]-a[i];
+  }
+  return {asym,shape,spread:Math.max(...a)-Math.min(...a),distinct:new Set(a).size};
+}
+function arrangements(vals){
+  const n=vals.length, asc=vals.slice().sort((x,y)=>x-y);
+  const cnt=new Map(); asc.forEach(v=>cnt.set(v,(cnt.get(v)||0)+1));
+  const pairs=[],singles=[];
+  [...cnt.keys()].sort((x,y)=>x-y).forEach(v=>{const c=cnt.get(v);for(let p=0;p<Math.floor(c/2);p++)pairs.push(v);if(c%2)singles.push(v);});
+  const A=new Array(n); let L=0,R=n-1;
+  pairs.forEach(v=>{A[L++]=v;A[R--]=v;});
+  singles.sort((x,y)=>x-y).forEach((v,i)=>{if(i%2===0)A[L++]=v;else A[R--]=v;});
+  const B=new Array(n); L=0;R=n-1;
+  asc.forEach((v,i)=>{if(i%2===0)B[L++]=v;else B[R--]=v;});
+  const C=B.slice().reverse(), D=A.slice().reverse();
+  return [A,D,B,C];
+}
+function keyOf(c){return [c.n,c.asym,c.shape,c.fExtra,c.spread,c.distinct];}
+function cmp(a,b){const ka=keyOf(a),kb=keyOf(b);for(let i=0;i<ka.length;i++){if(Math.abs(ka[i]-kb[i])>E)return ka[i]-kb[i];}return 0;}
+function nRange(){
+  const sizes=sizeList(); if(!sizes.length) return null;
+  const W=Math.round(S.W*U), lo=Math.ceil((W-2*S.fMax*U)-E), hi=Math.floor(W-2*S.fMin*U+E);
+  if(hi<sizes[0]) return null;
+  return {lo:Math.max(1,Math.ceil(Math.max(lo,sizes[0])/sizes[sizes.length-1])),hi:Math.floor(hi/sizes[0])};
+}
+function solve(){
+  const sizes=sizeList(); if(!sizes.length) return [];
+  const W=Math.round(S.W*U), g=sizes.reduce(gcd);
+  const tHi=Math.floor(W-2*S.fMin*U+E), tLo=Math.ceil(W-2*S.fMax*U-E);
+  const out=[], seen=new Set();
+  const Ts=[];
+  for(let t=Math.floor(tHi/g)*g;t>=Math.max(tLo,sizes[0]);t-=g) Ts.push(t);
+  if(!Ts.length) return [];
+  const fixed=S.nMode==='auto'?null:parseInt(S.nMode);
+  let globalLo=Infinity;
+  Ts.forEach(t=>{globalLo=Math.min(globalLo,Math.ceil(t/sizes[sizes.length-1]));});
+  Ts.forEach(T=>{
+    const nLo=Math.ceil(T/sizes[sizes.length-1]), nHi=Math.floor(T/sizes[0]);
+    let ns=[];
+    if(fixed) ns=[fixed];
+    else for(let n=Math.max(nLo,globalLo);n<=Math.min(nHi,globalLo+2);n++) ns.push(n);
+    ns.forEach(n=>{
+      if(n<nLo||n>nHi) return;
+      multisets(n,T,sizes,40000).forEach(ms=>{
+        let best=null;
+        arrangements(ms).forEach(a=>{
+          const m=metrics(a);
+          const c={cabs:a.map(v=>v/U),n,f:(W-T)/2/U,fExtra:(W-T)/2/U-S.fMin,...m};
+          c.asym/=U;c.shape/=U;c.spread/=U;
+          if(!best||cmp(c,best)<0) best=c;
+        });
+        const k=best.cabs.join('-')+'|'+best.f;
+        if(!seen.has(k)){seen.add(k);out.push(best);}
+      });
+    });
+  });
+  out.sort(cmp);
+  return out;
+}
+
+/* ---------- state actions ---------- */
+function readInputs(){
+  const W=parseLen($('w').value), fMin=parseLen($('fmin').value), fMax=parseLen($('fmax').value);
+  const cmin=parseLen($('cmin').value), cmax=parseLen($('cmax').value), step=parseLen($('cstep').value);
+  S.err=null;
+  if(!(W>0)) S.err='Enter a wall-to-wall width, such as 126 or 10\'-6".';
+  else if(!(fMin>=0)) S.err='Filler width must be 0 or more.';
+  else if(!(cmin>0&&cmax>=cmin&&step>0)) S.err='Check cabinet sizes: smallest, largest and increment must be positive.';
+  S.W=W;S.fMin=fMin;S.fMax=Math.max(fMax>=0?fMax:fMin,fMin);S.cmin=cmin;S.cmax=cmax;S.step=step;
+}
+function fillCount(){
+  const sel=$('n'), cur=S.nMode, r=S.err?null:nRange();
+  let html='<option value="auto">Auto (fewest)</option>';
+  if(r) for(let n=r.lo;n<=Math.min(r.hi,r.lo+10);n++) html+=`<option value="${n}">${n} cabinets</option>`;
+  sel.innerHTML=html;
+  sel.value=[...sel.options].some(o=>o.value===cur)?cur:'auto';
+  S.nMode=sel.value;
+}
+function recompute(){
+  readInputs(); fillCount();
+  S.cands=S.err?[]:solve();
+  S.chosen=S.cands.length?0:-1;
+  S.layout=S.cands.length?S.cands[0].cabs.slice():[];
+  S.sel=null;S.edited=false;
+  render();
+}
+function load(i){S.chosen=i;S.layout=S.cands[i].cabs.slice();S.sel=null;S.edited=false;render();}
+function current(){
+  const sum=S.layout.reduce((a,b)=>a+b,0), f=(S.W-sum)/2;
+  const m=S.layout.length?metrics(S.layout.map(v=>Math.round(v*U))):null;
+  return {sum,f,m};
+}
+
+/* ---------- rendering ---------- */
+function render(){
+  renderStatus();renderSVG();renderChips();renderAlts();renderSched();
+}
+function renderStatus(){
+  const el=$('status');
+  if(S.err){el.innerHTML=`<span class="pill warn">Input</span><span>${S.err}</span>`;return;}
+  if(!S.layout.length){el.innerHTML=`<span class="pill warn">No fit</span><span>No combination of ${fmt(S.cmin)}–${fmt(S.cmax)} cabinets fits with fillers between ${fmt(S.fMin)} and ${fmt(S.fMax)}. Try a wider max filler or a different count.</span>`;return;}
+  const {sum,f,m}=current();
+  const pills=[];
+  pills.push(`<span class="pill info">${S.layout.length} cabinets</span>`);
+  pills.push(m.asym===0?`<span class="pill ok">Symmetrical</span>`:`<span class="pill warn">Not symmetrical</span>`);
+  if(m.shape===0&&m.spread>0) pills.push(`<span class="pill ok">Steps up to center</span>`);
+  if(m.spread===0) pills.push(`<span class="pill ok">All equal</span>`);
+  if(f<S.fMin-E) pills.push(`<span class="pill warn">Filler under ${fmt(S.fMin)}</span>`);
+  else if(f>S.fMax+E) pills.push(`<span class="pill warn">Filler over ${fmt(S.fMax)}</span>`);
+  if(S.edited) pills.push(`<span class="pill info">Edited</span>`);
+  el.innerHTML=pills.join('')+`<span>Wall <b>${fmt(S.W)}</b> (${fmtFt(S.W)}) · Cabinets <b>${fmt(sum)}</b> · Fillers <b>${fmt(f)}</b> each</span>`;
+}
+function renderSVG(){
+  const el=$('elev');
+  if(S.err||!S.layout.length){el.innerHTML=S.err?'':'<div class="empty">Nothing to draw yet.</div>';return;}
+  const W=S.W,{f}=current(),k=Math.max(1,W/130);
+  const fs=2.4*k, fsS=2*k, sw=0.12*k, dimGap=7*k;
+  const topY=0, ctT=1.5, boxTop=ctT, floor=36, kickH=4, kickIn=3;
+  const yDimC=topY-4*k, yDimO=yDimC-dimGap, yTop=yDimO-6*k;
+  const yBot=floor+5*k, mX=8*k;
+  const vb=[-mX,yTop,W+2*mX,yBot-yTop+8*k];
+  let s=`<svg viewBox="${vb.join(' ')}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Base cabinet elevation">`;
+  s+=`<defs><pattern id="hf" width="${1.2*k}" height="${1.2*k}" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="${1.2*k}" class="s-hatch" stroke-width="${sw}"/></pattern>
+  <pattern id="hw" width="${2*k}" height="${2*k}" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="${2*k}" class="s-hatch" stroke-width="${sw*1.3}"/></pattern></defs>`;
+  // walls
+  const wallW=4*k, wallTop=yDimC+2*k;
+  s+=`<rect x="${-wallW}" y="${wallTop}" width="${wallW}" height="${floor+2*k-wallTop}" fill="url(#hw)"/>`;
+  s+=`<rect x="${W}" y="${wallTop}" width="${wallW}" height="${floor+2*k-wallTop}" fill="url(#hw)"/>`;
+  s+=`<line x1="0" y1="${wallTop}" x2="0" y2="${floor+2*k}" class="s-ink" stroke-width="${sw*2}"/>`;
+  s+=`<line x1="${W}" y1="${wallTop}" x2="${W}" y2="${floor+2*k}" class="s-ink" stroke-width="${sw*2}"/>`;
+  s+=`<line x1="${-wallW}" y1="${floor}" x2="${W+wallW}" y2="${floor}" class="s-ink" stroke-width="${sw*2}"/>`;
+  // countertop
+  s+=`<rect x="0" y="${topY}" width="${W}" height="${ctT}" class="s-top" stroke-width="${sw}"/>`;
+  // fillers
+  const fw=Math.max(f,0);
+  [[0,fw],[W-fw,fw]].forEach(([x,w])=>{
+    if(w<=0) return;
+    s+=`<rect x="${x}" y="${boxTop}" width="${w}" height="${floor-kickH-boxTop}" class="s-cab" stroke-width="${sw}"/>`;
+    s+=`<rect x="${x}" y="${boxTop}" width="${w}" height="${floor-kickH-boxTop}" fill="url(#hf)"/>`;
+    s+=`<rect x="${x}" y="${floor-kickH}" width="${w}" height="${kickH}" class="s-kick" stroke-width="${sw}"/>`;
+  });
+  // cabinets
+  let x=fw;
+  S.layout.forEach((w,i)=>{
+    const sel=S.sel===i, cls=sel?'s-sel':'s-cab';
+    const bx=x, bw=w, gap=0.25, rv=0.35;
+    s+=`<g class="s-hit" data-i="${i}">`;
+    s+=`<rect x="${bx}" y="${boxTop}" width="${bw}" height="${floor-kickH-boxTop}" class="${cls}" stroke-width="${sel?sw*2.4:sw}"/>`;
+    s+=`<rect x="${bx+kickIn*0}" y="${floor-kickH}" width="${bw}" height="${kickH}" class="s-kick" stroke-width="${sw}"/>`;
+    // drawer
+    const dT=boxTop+rv, dB=boxTop+6;
+    s+=`<rect x="${bx+rv}" y="${dT}" width="${bw-2*rv}" height="${dB-dT}" class="s-ink" stroke-width="${sw}"/>`;
+    s+=`<line x1="${bx+bw/2-2}" y1="${(dT+dB)/2}" x2="${bx+bw/2+2}" y2="${(dT+dB)/2}" class="s-ink" stroke-width="${sw*3}" stroke-linecap="round"/>`;
+    // doors
+    const oT=dB+gap, oB=floor-kickH-rv;
+    const dash=`stroke-dasharray="${0.9*k} ${0.6*k}"`;
+    if(w>=24){
+      const hw=(bw-2*rv-gap)/2;
+      [[bx+rv,'L'],[bx+rv+hw+gap,'R']].forEach(([dx,side])=>{
+        s+=`<rect x="${dx}" y="${oT}" width="${hw}" height="${oB-oT}" class="s-ink" stroke-width="${sw}"/>`;
+        // swing: hinge on outer edge
+        const hx=side==='L'?dx:dx+hw, ox=side==='L'?dx+hw:dx;
+        s+=`<polyline points="${ox},${oT} ${hx},${(oT+oB)/2} ${ox},${oB}" class="s-swing" stroke-width="${sw}" ${dash}/>`;
+        const px=side==='L'?dx+hw-1.2:dx+1.2;
+        s+=`<line x1="${px}" y1="${oT+1.2}" x2="${px}" y2="${oT+5}" class="s-ink" stroke-width="${sw*3}" stroke-linecap="round"/>`;
+      });
+    } else {
+      const dx=bx+rv, dw=bw-2*rv, hingeLeft=(i<S.layout.length/2);
+      const hx=hingeLeft?dx:dx+dw, ox=hingeLeft?dx+dw:dx;
+      s+=`<rect x="${dx}" y="${oT}" width="${dw}" height="${oB-oT}" class="s-ink" stroke-width="${sw}"/>`;
+      s+=`<polyline points="${ox},${oT} ${hx},${(oT+oB)/2} ${ox},${oB}" class="s-swing" stroke-width="${sw}" ${dash}/>`;
+      const px=hingeLeft?dx+dw-1.2:dx+1.2;
+      s+=`<line x1="${px}" y1="${oT+1.2}" x2="${px}" y2="${oT+5}" class="s-ink" stroke-width="${sw*3}" stroke-linecap="round"/>`;
+    }
+    // tag below floor
+    s+=`<text x="${bx+bw/2}" y="${floor+3.6*k}" text-anchor="middle" font-size="${fs*1.1}" class="s-tag">B${fmt(w).replace('"','')}</text>`;
+    s+=`</g>`;
+    x+=w;
+  });
+  // dimension strings
+  const dim=(x1,x2,y,label,small)=>{
+    const t=0.9*k;
+    let d=`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" class="s-dim" stroke-width="${sw}"/>`;
+    [x1,x2].forEach(xx=>{
+      d+=`<line x1="${xx}" y1="${y+1.4*k}" x2="${xx}" y2="${y-1.4*k}" class="s-dim" stroke-width="${sw}"/>`;
+      d+=`<line x1="${xx-t}" y1="${y+t}" x2="${xx+t}" y2="${y-t}" class="s-ink" stroke-width="${sw*2.2}"/>`;
+    });
+    const f2=small?fsS:fs;
+    d+=`<text x="${(x1+x2)/2}" y="${small?y+2.9*k:y-0.9*k}" text-anchor="middle" font-size="${f2}" class="${small?'s-txt2':'s-txt'}">${label}</text>`;
+    return d;
+  };
+  // extension lines
+  const pts=[0,fw];let xx=fw;S.layout.forEach(w=>{xx+=w;pts.push(xx);});pts.push(W);
+  pts.forEach(p=>{s+=`<line x1="${p}" y1="${topY-0.8*k}" x2="${p}" y2="${yDimC-1.6*k}" class="s-dim" stroke-width="${sw*0.7}"/>`;});
+  s+=dim(0,fw,yDimC,fmt(fw),true);
+  xx=fw;S.layout.forEach(w=>{s+=dim(xx,xx+w,yDimC,fmt(w));xx+=w;});
+  s+=dim(W-fw,W,yDimC,fmt(fw),true);
+  s+=dim(0,W,yDimO,fmt(W)+'  ('+fmtFt(W)+') WALL TO WALL');
+  // centerline
+  s+=`<line x1="${W/2}" y1="${yDimC+1.5*k}" x2="${W/2}" y2="${floor+1.5*k}" stroke="var(--accent)" stroke-width="${sw}" stroke-dasharray="${2.4*k} ${0.8*k} ${0.5*k} ${0.8*k}" opacity=".7"/>`;
+  s+=`</svg>`;
+  el.innerHTML=s;
+  el.querySelectorAll('.s-hit').forEach(g=>g.addEventListener('click',()=>{const i=+g.dataset.i;S.sel=S.sel===i?null:i;render();}));
+}
+function renderChips(){
+  const c=$('chips'), t=$('seltools');
+  if(S.err||!S.layout.length){c.innerHTML='';t.innerHTML='';return;}
+  const {f}=current();
+  let h=`<span class="chip filler">F ${fmt(f)}</span>`;
+  S.layout.forEach((w,i)=>{h+=`<button type="button" class="chip${S.sel===i?' sel':''}" data-i="${i}">B${fmt(w).replace('"','')}</button>`;});
+  h+=`<span class="chip filler">F ${fmt(f)}</span>`;
+  c.innerHTML=h;
+  c.querySelectorAll('button.chip').forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.i;S.sel=S.sel===i?null:i;render();}));
+  const i=S.sel, has=i!=null;
+  const w=has?S.layout[i]:0;
+  t.innerHTML=(has?`<span class="lbl">Cabinet ${i+1} · ${fmt(w)}</span>
+    <button class="btn" data-a="minus" ${w-S.step<S.cmin-E?'disabled':''}>− ${fmt(S.step)}</button>
+    <button class="btn" data-a="plus" ${w+S.step>S.cmax+E?'disabled':''}>+ ${fmt(S.step)}</button>
+    <button class="btn" data-a="left" ${i===0?'disabled':''}>◀ Move</button>
+    <button class="btn" data-a="right" ${i===S.layout.length-1?'disabled':''}>Move ▶</button>
+    <button class="btn" data-a="split" ${w/2<S.cmin-E||Math.abs((w/2-S.cmin)/S.step-Math.round((w/2-S.cmin)/S.step))>E?'disabled':''}>Split</button>
+    <button class="btn" data-a="del" ${S.layout.length<2?'disabled':''}>Remove</button>`
+    :`<span class="lbl">Click a cabinet to adjust it</span>`)+
+    (S.edited?`<button class="btn primary" data-a="reset">Reset to option ${S.chosen+1}</button>`:'');
+  t.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>act(b.dataset.a)));
+}
+function act(a){
+  const i=S.sel,L=S.layout;
+  if(a==='reset'){load(S.chosen);return;}
+  if(a==='minus')L[i]-=S.step;
+  if(a==='plus')L[i]+=S.step;
+  if(a==='left'){[L[i-1],L[i]]=[L[i],L[i-1]];S.sel=i-1;}
+  if(a==='right'){[L[i+1],L[i]]=[L[i],L[i+1]];S.sel=i+1;}
+  if(a==='split'){L.splice(i,1,L[i]/2,L[i]/2);}
+  if(a==='del'){L.splice(i,1);S.sel=null;}
+  S.edited=true;render();
+}
+function renderAlts(){
+  const el=$('alts');
+  if(S.err||!S.cands.length){el.innerHTML='<div class="empty">No options for these inputs.</div>';return;}
+  // top 4 per cabinet count, up to 3 counts
+  const byN=new Map();
+  S.cands.forEach((c,idx)=>{if(!byN.has(c.n))byN.set(c.n,[]);const a=byN.get(c.n);if(a.length<4)a.push(idx);});
+  const ns=[...byN.keys()].sort((a,b)=>a-b).slice(0,3);
+  let h='';
+  ns.forEach(n=>{
+    h+=`<div class="group">${n} cabinets</div>`;
+    byN.get(n).forEach(idx=>{
+      const c=S.cands[idx];
+      const tot=S.W;
+      const bars=`<span class="f" style="flex:${c.f}"></span>`+c.cabs.map(w=>`<span style="flex:${w}"></span>`).join('')+`<span class="f" style="flex:${c.f}"></span>`;
+      const tags=[];
+      tags.push(c.asym===0?'<span class="y">Symmetrical</span>':'<span class="n">Not symmetrical</span>');
+      if(c.spread===0) tags.push('<span class="y">All equal</span>');
+      else if(c.shape===0) tags.push('<span class="y">Steps up to center</span>');
+      else tags.push('<span class="n">Dips at center</span>');
+      tags.push(c.fExtra<E?`<span class="y">Fillers ${fmt(c.f)}</span>`:`<span>Fillers ${fmt(c.f)}</span>`);
+      h+=`<button type="button" class="alt${idx===S.chosen?' on':''}" data-i="${idx}">
+        <span class="rank">${idx+1}</span>
+        <span class="seq">${c.cabs.map(w=>fmt(w).replace('"','')).join(' · ')}</span>
+        <span class="bar">${bars}</span>
+        <span class="tags">${tags.join('')}</span></button>`;
+    });
+  });
+  el.innerHTML=h;
+  el.querySelectorAll('.alt').forEach(b=>b.addEventListener('click',()=>load(+b.dataset.i)));
+}
+function schedRows(){
+  const {f}=current(); const rows=[];
+  rows.push(['F1','Filler',f]);
+  S.layout.forEach((w,i)=>rows.push([`B${fmt(w).replace('"','')}`,w>=24?'Base, 1 drawer / 2 doors':'Base, 1 drawer / 1 door',w,i+1]));
+  rows.push(['F2','Filler',f]);
+  return rows;
+}
+function renderSched(){
+  const el=$('sched');
+  if(S.err||!S.layout.length){el.innerHTML='';return;}
+  const rows=schedRows();
+  let h='<table><thead><tr><th>Pos.</th><th>Tag</th><th>Type</th><th>Width</th></tr></thead><tbody>';
+  rows.forEach((r,i)=>{h+=`<tr><td>${i+1}</td><td>${r[0]}</td><td style="font-family:var(--body)">${r[1]}</td><td>${fmt(r[2])}</td></tr>`;});
+  h+=`<tr class="tot"><td></td><td></td><td style="font-family:var(--body)">Total</td><td>${fmt(rows.reduce((a,r)=>a+r[2],0))}</td></tr></tbody></table>`;
+  el.innerHTML=h;
+}
+$('copy').addEventListener('click',()=>{
+  if(!S.layout.length) return;
+  const rows=schedRows();
+  const txt=`Wall to wall ${fmt(S.W)} (${fmtFt(S.W)})\n`+rows.map((r,i)=>`${i+1}\t${r[0]}\t${r[1]}\t${fmt(r[2])}`).join('\n')+`\nSequence: ${rows.map(r=>fmt(r[2])).join(' | ')}`;
+  const b=$('copy');
+  const done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1400);};
+  try{navigator.clipboard.writeText(txt).then(done,()=>fallback(txt));}catch(e){fallback(txt);}
+  function fallback(t){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}ta.remove();}
+});
+
+['w','fmin','fmax','cmin','cmax','cstep'].forEach(id=>$(id).addEventListener('input',()=>{clearTimeout(S._t);S._t=setTimeout(recompute,180);}));
+$('n').addEventListener('change',e=>{S.nMode=e.target.value;recompute();});
+recompute();
+})();
+</script>
+</body></html>
